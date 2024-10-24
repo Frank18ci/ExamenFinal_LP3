@@ -71,35 +71,17 @@ public class PacienteController {
 	@RequestMapping(value = "/PacienteReport", method = RequestMethod.GET)
 	@ResponseBody
 	public void PacienteReport(HttpServletResponse response) throws JRException, IOException, SQLException {
-	    try (Connection connection = jdbcTemplate.getDataSource().getConnection();
-	         InputStream jasperStream = this.getClass().getResourceAsStream("/reporte/ReportePacientes.jasper");
-	         OutputStream outputStream = response.getOutputStream()) {
-	         
-	        if (jasperStream == null) {
-	            throw new FileNotFoundException("El archivo ReportePacientes.jasper no fue encontrado en la ruta especificada.");
-	        }
-	        Map<String, Object> params = new HashMap<String, Object>();
-	        JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
-	        JasperPrint jasperPrint = getReport(pacienteService.listarPacientes());
-	        response.setContentType("application/x-pdf");
-	        response.setHeader("Content-disposition", "inline; filename=pacientes_report.pdf");
-	        JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
-	    }
+	    Connection connection = jdbcTemplate.getDataSource().getConnection();
+	    InputStream jasperStream = this.getClass().getResourceAsStream("/reporte/Blank_A4.jasper");
+	    Map<String, Object> params = new HashMap<String, Object>();
+	    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
+	    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, connection);
+	    response.setContentType("application/x-pdf");
+	    response.setHeader("Content-disposition", "inline; filename=paciento_report.pdf");
+	    final OutputStream outputStream = response.getOutputStream();
+	    JasperExportManager.exportReportToPdfStream(jasperPrint, outputStream);
+	    connection.close();
 	}
-	public byte[] exportToPdf(List<Paciente> list) throws JRException, FileNotFoundException {
-        return JasperExportManager.exportReportToPdf(getReport(list));
-    }
-
-
-    private JasperPrint getReport(List<Paciente> list) throws FileNotFoundException, JRException {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("petsData", new JRBeanCollectionDataSource(list));
-
-        JasperPrint report = JasperFillManager.fillReport(JasperCompileManager.compileReport(
-                ResourceUtils.getFile("classpath:Black_A4.jrxml")
-                        .getAbsolutePath()), params, new JREmptyDataSource());
-
-        return report;
-    }
+	
 
 }
