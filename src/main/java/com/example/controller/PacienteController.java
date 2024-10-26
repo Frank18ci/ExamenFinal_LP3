@@ -72,7 +72,7 @@ public class PacienteController {
 	@ResponseBody
 	public void PacienteReport(HttpServletResponse response) throws JRException, IOException, SQLException {
 	    Connection connection = jdbcTemplate.getDataSource().getConnection();
-	    InputStream jasperStream = this.getClass().getResourceAsStream("/reporte/Blank_A4.jasper");
+	    InputStream jasperStream = this.getClass().getResourceAsStream("/reporte/Pacientes.jasper");
 	    Map<String, Object> params = new HashMap<String, Object>();
 	    JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
 	    JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, connection);

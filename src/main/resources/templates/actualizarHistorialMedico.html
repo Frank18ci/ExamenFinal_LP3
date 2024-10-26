@@ -55,7 +55,7 @@
 					<div class="row col-md-10">
 						<div class="form-group col-3">
 							<label>Id Historial Medico</label>
-							<input type="text" disabled required name="id" th:field="*{id}" class="form-control">
+							<input type="text" required name="id" th:field="*{id}" class="form-control">
 						</div>
 						<div class="form-group col-6">
 							<label>Paciente</label>
@@ -80,8 +80,8 @@
 					</div>
 					<br>
 					<div class="row col-auto ms-auto">
-						<button type="submit" class="btn btn-primary col-auto">Agregar</button>
-						<a class="btn btn-success col-auto ms-1" th:action="@{/historialMedico/listar}">Volver a la
+						<button type="submit" class="btn btn-primary col-auto">Actualizar</button>
+						<a class="btn btn-success col-auto ms-1" th:href="@{/historialMedico/listar}">Volver a la
 							lista</a>
 					</div>
 				</div>
